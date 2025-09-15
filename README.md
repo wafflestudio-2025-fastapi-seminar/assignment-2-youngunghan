@@ -210,7 +210,7 @@
 
 ##### 요청 예시
 - 다음의 Field가 헤더에 포함됨
-	```HTTP
+	```
 	Authorization: Bearer refresh_token(JWT)값
 	```
 
@@ -234,7 +234,7 @@
 
 ##### 요청 예시
 - 다음의 Field가 헤더에 포함됨
-	```HTTP
+	```
 	Authorization: Bearer refresh_token(JWT)값
 	```
 
