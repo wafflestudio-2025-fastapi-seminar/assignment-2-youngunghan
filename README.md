@@ -257,12 +257,12 @@
 - 서버는 생성한 `sid`(str)를 클라이언트의 쿠키로 설정합니다.
 	- 세션은 `LONG_SESSION_LIFESPAN`(분) 동안 유효한 것으로 합니다.
 - **요청 예시**
-		```json
-		{
-			"email": "waffle@example.com",
-			"password": "password1234"
-		}
-		```
+	```json
+	{
+		"email": "waffle@example.com",
+		"password": "password1234"
+	}
+	```
 
 - **응답**
 	- 성공 응답
