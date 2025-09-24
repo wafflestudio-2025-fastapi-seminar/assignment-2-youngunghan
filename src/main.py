@@ -4,14 +4,12 @@ from fastapi.responses import JSONResponse
 
 from tests.util import get_all_src_py_files_hash
 from src.api import api_router
-from src.auth.router import auth_router
 from src.common.custom_exception import CustomException
 from src.auth.errors import MissingValueException
 
 app = FastAPI()
 
 app.include_router(api_router)
-app.include_router(auth_router)
 
 @app.exception_handler(CustomException)
 def handle_custom_exception(request: Request, exc: CustomException):

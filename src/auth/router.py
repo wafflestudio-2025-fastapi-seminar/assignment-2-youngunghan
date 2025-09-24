@@ -120,7 +120,12 @@ def logout_session(response: Response, sid: Optional[str] = Cookie(None)):
         if sid in session_db:
             del session_db[sid]
         
-        # Expire the cookie
-        response.set_cookie(key="sid", value="", expires=0)
+        # Delete the cookie by setting it to expire in the past
+        response.set_cookie(
+            key="sid", 
+            value="", 
+            expires="Thu, 01 Jan 1970 00:00:00 GMT",
+            httponly=True
+        )
     
     return Response(status_code=status.HTTP_204_NO_CONTENT)
