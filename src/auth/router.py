@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, Cookie, Header, Response, status
+from fastapi.responses import JSONResponse
 from typing import Optional
 
 from src.common.database import blocked_token_db, session_db, user_db
@@ -113,15 +114,17 @@ def login_session(request: LoginRequest, response: Response):
     return {"message": "Session created successfully"}
 
 @auth_router.delete("/session")
-def logout_session(response: Response, sid: Optional[str] = Cookie(None)):
+def logout_session(sid: Optional[str] = Cookie(None)):
     # Always return 204, regardless of whether session exists
     if sid:
         # Remove session from database if it exists
         if sid in session_db:
             del session_db[sid]
     
-    # Always delete the cookie regardless of whether sid exists
-    # Use delete_cookie with domain and path to properly remove the cookie
-    response.delete_cookie(key="sid", domain="testserver.local", path="/", httponly=True)
+    # Create response and delete cookie
+    response = Response(status_code=status.HTTP_204_NO_CONTENT)
     
-    return Response(status_code=status.HTTP_204_NO_CONTENT)
+    # Delete the cookie by setting it with empty value and immediate expiration
+    response.delete_cookie(key="sid", path="/")
+    
+    return response

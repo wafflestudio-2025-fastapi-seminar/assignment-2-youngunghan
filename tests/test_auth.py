@@ -234,11 +234,6 @@ def test_session_logout(
 
     assert res.status_code == 204
 
-    # Clear the cookie manually for testing purposes
-    # TestClient doesn't properly handle cookie deletion
-    if "sid" in client.cookies:
-        del client.cookies["sid"]
-
     res = client.get("/api/users/me")
     res_json = res.json()
     
