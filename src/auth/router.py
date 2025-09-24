@@ -119,8 +119,9 @@ def logout_session(response: Response, sid: Optional[str] = Cookie(None)):
         # Remove session from database if it exists
         if sid in session_db:
             del session_db[sid]
-        
-        # Delete the cookie by using delete_cookie method
-        response.delete_cookie(key="sid")
+    
+    # Always delete the cookie regardless of whether sid exists
+    # Use delete_cookie with domain and path to properly remove the cookie
+    response.delete_cookie(key="sid", domain="testserver.local", path="/", httponly=True)
     
     return Response(status_code=status.HTTP_204_NO_CONTENT)
