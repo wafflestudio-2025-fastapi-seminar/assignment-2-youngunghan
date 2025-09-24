@@ -1,6 +1,6 @@
 import jwt
 import secrets
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, UTC
 from typing import Dict, Optional
 import argon2
 
@@ -13,7 +13,7 @@ JWT_ALGORITHM = "HS256"
 
 def create_jwt_token(user_id: int, expires_minutes: int) -> str:
     """Create a JWT token with user_id as subject"""
-    expires_at = datetime.utcnow() + timedelta(minutes=expires_minutes)
+    expires_at = datetime.now(UTC) + timedelta(minutes=expires_minutes)
     payload = {
         "sub": str(user_id),
         "exp": expires_at
@@ -57,7 +57,7 @@ def authenticate_user(email: str, password: str) -> Optional[User]:
 def create_session(user_id: int, lifespan_minutes: int) -> str:
     """Create a new session"""
     sid = secrets.token_urlsafe(32)
-    expires_at = datetime.utcnow() + timedelta(minutes=lifespan_minutes)
+    expires_at = datetime.now(UTC) + timedelta(minutes=lifespan_minutes)
     
     session = Session(
         sid=sid,
@@ -76,7 +76,7 @@ def get_user_from_session(sid: str) -> Optional[User]:
     session = session_db[sid]
     
     # Check if session is expired
-    if datetime.utcnow() > session.expires_at:
+    if datetime.now(UTC) > session.expires_at:
         # Remove expired session
         del session_db[sid]
         return None
@@ -113,11 +113,11 @@ def add_token_to_blacklist(token: str):
             blocked_token_db[token] = exp_datetime
     except jwt.InvalidTokenError:
         # If we can't decode the token, still add it to blacklist with current time
-        blocked_token_db[token] = datetime.utcnow()
+        blocked_token_db[token] = datetime.now(UTC)
 
 def cleanup_expired_tokens():
     """Remove expired tokens from blacklist"""
-    current_time = datetime.utcnow()
+    current_time = datetime.now(UTC)
     expired_tokens = [token for token, exp_time in blocked_token_db.items() if current_time > exp_time]
     for token in expired_tokens:
         del blocked_token_db[token] 

@@ -233,6 +233,10 @@ def test_session_logout(
     res = client.delete("/api/auth/session")
 
     assert res.status_code == 204
+    
+    # clear the cookie
+    if "sid" in client.cookies:
+        del client.cookies["sid"]
 
     res = client.get("/api/users/me")
     res_json = res.json()
